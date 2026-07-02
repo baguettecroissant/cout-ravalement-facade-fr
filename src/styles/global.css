@@ -1,0 +1,201 @@
+/* Google Fonts imports */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+:root {
+  /* === PALETTE "MINÉRAL & BÉTON MODERNE" === */
+  --primary: #1E3A5F;          /* Bleu minéral profond */
+  --primary-light: #E8F0FE;    /* Bleu glacier clair */
+  --primary-dark: #0F2440;     /* Bleu nuit */
+  --secondary: #64748B;        /* Gris ardoise */
+  --accent: #0D9488;           /* Teal/turquoise */
+  --accent-hover: #0F766E;     /* Teal foncé */
+  --accent-light: #CCFBF1;     /* Menthe clair */
+  --text: #0F172A;             /* Bleu-noir */
+  --text-secondary: #475569;   /* Gris ardoise moyen */
+  --text-muted: #94A3B8;       /* Gris clair */
+  --bg: #F8FAFC;               /* Blanc froid */
+  --bg-alt: #F1F5F9;           /* Gris bleuté */
+  --card-bg: #FFFFFF;          /* Blanc */
+  --border: #E2E8F0;           /* Gris froid */
+  --border-light: #F1F5F9;     /* Gris très clair */
+  --footer-bg: #0F2440;        /* Bleu nuit */
+  --footer-text: #CBD5E1;      /* Gris clair bleuté */
+  --success: #059669;          /* Vert */
+  --warning: #F59E0B;          /* Ambre */
+  --danger: #DC2626;           /* Rouge */
+
+  /* === GRADIENTS === */
+  --hero-gradient: linear-gradient(160deg, rgba(15, 36, 64, 0.94), rgba(30, 58, 95, 0.78));
+  --section-gradient: linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%);
+  --cta-gradient: linear-gradient(135deg, #0D9488, #0F766E);
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Base resets */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--text);
+  background-color: var(--bg);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+  color: var(--primary-dark);
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 0.75rem;
+}
+
+p {
+  line-height: 1.625;
+  color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Micro-animations */
+@keyframes badge-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.4);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 0 0 8px rgba(13, 148, 136, 0);
+  }
+}
+
+@keyframes counter-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes price-glow {
+  0%, 100% {
+    color: var(--accent);
+  }
+  50% {
+    color: var(--primary);
+  }
+}
+
+/* Utility layout helper classes */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.75rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.btn-primary {
+  background: var(--cta-gradient);
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  color: #ffffff;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+}
+
+.btn-secondary:hover {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+/* Bon à savoir notes */
+.note-info {
+  background-color: var(--primary-light);
+  border-left: 4px solid var(--primary);
+  padding: 1.25rem;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.note-danger {
+  background-color: #FEF2F2;
+  border-left: 4px solid var(--danger);
+  padding: 1.25rem;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.note-content {
+  flex: 1;
+}
+
+.note-content p {
+  margin-bottom: 0;
+}

@@ -1,0 +1,154 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/seo/Breadcrumb.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { getAllDepartments, getDepartmentSlug } from '../../lib/cities';
+
+const allDepts = getAllDepartments();
+
+// Group departments by region
+const regionsMap: Record<string, typeof allDepts> = {};
+allDepts.forEach((dept) => {
+  if (!regionsMap[dept.region]) {
+    regionsMap[dept.region] = [];
+  }
+  regionsMap[dept.region].push(dept);
+});
+
+const breadcrumbs = [
+  { name: "Accueil", url: "/" },
+  { name: "Annuaire Artisans" }
+];
+---
+
+<BaseLayout
+  title="Annuaire des Artisans Façadiers par Département — 2026"
+  description="Trouvez des façadiers qualifiés près de chez vous. Consultez notre annuaire complet des départements français et estimez votre budget de ravalement."
+>
+  <Breadcrumb items={breadcrumbs} />
+
+  <section class="annuaire-index-page">
+    <div class="container">
+      <div class="section-header">
+        <h1>Annuaire National des Façadiers & Spécificités Locales</h1>
+        <p>Sélectionnez votre département pour découvrir les caractéristiques climatiques régionales, les aides locales et contacter des artisans RGE certifiés.</p>
+      </div>
+
+      <div class="regions-list">
+        {Object.keys(regionsMap).sort().map((regionName) => (
+          <div class="region-box">
+            <h2 class="region-title">{regionName}</h2>
+            <div class="depts-grid">
+              {regionsMap[regionName].map((dept) => (
+                <a href={`/annuaire/${getDepartmentSlug(dept.code, dept.name)}`} class="dept-card">
+                  <Icon name="ph:map-pin-duotone" class="dept-pin" />
+                  <div class="dept-info">
+                    <span class="dept-name"><strong>{dept.name}</strong></span>
+                    <span class="dept-code mono">Département {dept.code}</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .annuaire-index-page {
+    padding: 5rem 0;
+  }
+
+  .section-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 4rem auto;
+  }
+
+  .section-header h1 {
+    font-size: 2.5rem;
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+  }
+
+  .section-header p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+  }
+
+  .regions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+  }
+
+  .region-box {
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 2rem;
+  }
+
+  .region-box:last-child {
+    border-bottom: none;
+  }
+
+  .region-title {
+    font-size: 1.6rem;
+    color: var(--primary-dark);
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--accent);
+    padding-left: 0.75rem;
+  }
+
+  .depts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .dept-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: var(--shadow-sm);
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+  }
+
+  .dept-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow);
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .dept-pin {
+    width: 24px;
+    height: 24px;
+    color: var(--accent);
+  }
+
+  .dept-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dept-name {
+    font-size: 0.95rem;
+    color: var(--primary-dark);
+  }
+
+  .dept-card:hover .dept-name {
+    color: var(--accent);
+  }
+
+  .dept-code {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+</style>

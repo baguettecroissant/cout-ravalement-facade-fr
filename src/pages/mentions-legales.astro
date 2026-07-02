@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/seo/Breadcrumb.astro';
+
+const breadcrumbs = [
+  { name: "Accueil", url: "/" },
+  { name: "Mentions Légales" }
+];
+---
+
+<BaseLayout
+  title="Mentions Légales — Cout-Ravalement-Facade.fr"
+  description="Consultez les mentions légales et les conditions générales d'utilisation du site Cout-Ravalement-Facade.fr."
+>
+  <Breadcrumb items={breadcrumbs} />
+
+  <section class="legal-page">
+    <div class="container legal-container">
+      <div class="legal-main">
+        <h1>Mentions Légales</h1>
+        
+        <h2>1. Éditeur du site</h2>
+        <p>Le site internet <strong>Cout-Ravalement-Facade.fr</strong> est édité à titre indépendant dans le but d'informer les internautes sur les techniques et coûts de rénovation thermique et esthétique des façades. Il s'agit d'un site média d'affiliation.</p>
+        
+        <h2>2. Hébergement</h2>
+        <p>Ce site internet est hébergé par la plateforme Cloudflare Pages, opérée par Cloudflare Inc., dont le siège social se situe à San Francisco, Californie, États-Unis.</p>
+        
+        <h2>3. Propriété intellectuelle</h2>
+        <p>Toutes les marques, photographies, textes, commentaires, illustrations, images animées ou non, séquences vidéo, sons, ainsi que toutes les applications informatiques qui pourraient être utilisées pour faire fonctionner ce site sont protégés par les lois en vigueur au titre de la propriété intellectuelle. Ils sont la propriété pleine et entière de l'éditeur ou de ses partenaires.</p>
+        
+        <h2>4. Affiliation et intermédiation</h2>
+        <p>Cout-Ravalement-Facade.fr est un site d'information indépendant. Les formulaires de demande d'estimation de devis présents sur le site sont propulsés en partenariat avec la plateforme d'affiliation <strong>ViteUnDevis</strong> (Category #62). L'éditeur du site décline toute responsabilité concernant les relations contractuelles et les chantiers conclus entre l'internaute et les professionnels du bâtiment mis en relation.</p>
+        
+        <h2>5. Données personnelles et cookies</h2>
+        <p>Le site n'enregistre aucune donnée nominative en dehors de la navigation technique classique opérée par l'hébergeur. Les données saisies dans les formulaires d'estimation sont traitées directement par notre partenaire commercial conformément à sa politique de confidentialité.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal-page {
+    padding: 5rem 0;
+  }
+
+  .legal-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .legal-main {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .legal-main h1 {
+    font-size: 2.25rem;
+    color: var(--primary-dark);
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--border-light);
+    padding-bottom: 0.75rem;
+  }
+
+  .legal-main h2 {
+    font-size: 1.35rem;
+    color: var(--primary-dark);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .legal-main p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+</style>

@@ -1,0 +1,95 @@
+---
+interface Props {
+  targetValue: number;
+  label: string;
+  duration?: number;
+}
+
+const { targetValue, label, duration = 2000 } = Astro.props;
+---
+
+<div class="counter-box" data-target={targetValue} data-duration={duration}>
+  <div class="counter-display mono">
+    <span class="counter-num">0</span>
+    <span class="plus">+</span>
+  </div>
+  <p class="counter-label">{label}</p>
+</div>
+
+<style>
+  .counter-box {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 0.75rem 1.25rem;
+    color: #ffffff;
+    min-width: 180px;
+    text-align: center;
+    animation: counter-reveal 0.8s ease-out forwards;
+  }
+
+  .counter-display {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--accent-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .plus {
+    font-weight: 600;
+  }
+
+  .counter-label {
+    font-size: 0.8rem;
+    color: var(--footer-text);
+    margin-bottom: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+</style>
+
+<script>
+  function formatNumber(val: number): string {
+    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  }
+
+  const counters = document.querySelectorAll('.counter-box');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const box = entry.target as HTMLElement;
+        const numSpan = box.querySelector('.counter-num');
+        const target = parseInt(box.dataset.target || '0');
+        const duration = parseInt(box.dataset.duration || '2000');
+        
+        let start = 0;
+        const stepTime = Math.max(Math.floor(duration / 60), 15);
+        const steps = duration / stepTime;
+        const increment = Math.ceil(target / steps);
+        
+        const timer = setInterval(() => {
+          start += increment;
+          if (start >= target) {
+            clearInterval(timer);
+            if (numSpan) numSpan.textContent = formatNumber(target);
+          } else {
+            if (numSpan) numSpan.textContent = formatNumber(start);
+          }
+        }, stepTime);
+        
+        observer.unobserve(box);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  counters.forEach((c) => observer.observe(c));
+</script>

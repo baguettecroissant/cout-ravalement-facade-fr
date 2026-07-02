@@ -1,0 +1,149 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ViteUnDevisWidget from '../components/affiliation/ViteUnDevisWidget.astro';
+import Icon from '../components/ui/Icon.astro';
+---
+
+<BaseLayout
+  title="Estimation Gratuite de Ravalement de Façade — Devis Artisans 2026"
+  description="Estimez le coût de vos travaux de façade. Remplissez notre formulaire de devis gratuit pour recevoir jusqu'à 3 propositions d'artisans RGE certifiés."
+>
+  <section class="estimation-page">
+    <div class="container estimation-grid">
+      <div class="estimation-content">
+        <h1 class="est-title">Simulateur & Devis de Ravalement Gratuit</h1>
+        <p class="est-lead">Prenez 2 minutes pour spécifier votre projet et recevoir des propositions tarifaires détaillées d'artisans façadiers qualifiés de votre département.</p>
+        
+        <div class="est-features">
+          <div class="est-feature-item">
+            <Icon name="ph:shield-check-duotone" class="est-feat-icon" />
+            <div>
+              <h5>Artisans Certifiés Qualibat / RGE</h5>
+              <p>Nous vous mettons en relation uniquement avec des professionnels agréés disposant d'assurances décennales valides.</p>
+            </div>
+          </div>
+          
+          <div class="est-feature-item">
+            <Icon name="ph:currency-eur-duotone" class="est-feat-icon" />
+            <div>
+              <h5>Gratuit et sans engagement</h5>
+              <p>Les propositions d'estimations fournies par nos artisans partenaires sont 100% gratuites et ne vous engagent en rien.</p>
+            </div>
+          </div>
+          
+          <div class="est-feature-item">
+            <Icon name="ph:certificate-duotone" class="est-feat-icon" />
+            <div>
+              <h5>Aides de l'État incluses</h5>
+              <p>Si vos travaux incluent une isolation thermique par l'extérieur (ITE), les professionnels vous aident à déduire MaPrimeRénov'.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="estimation-widget-col">
+        <!-- ViteUnDevis Widget inside full-screen layout -->
+        <ViteUnDevisWidget />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .estimation-page {
+    padding: 5rem 0;
+    background-color: var(--bg-alt);
+    min-height: calc(100vh - 72px - 300px);
+    display: flex;
+    align-items: center;
+  }
+
+  .estimation-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .est-title {
+    font-size: 2.5rem;
+    color: var(--primary-dark);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+  }
+
+  .est-lead {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+  }
+
+  .est-features {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .est-feature-item {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+  }
+
+  .est-feat-icon {
+    width: 32px;
+    height: 32px;
+    color: var(--accent);
+    flex-shrink: 0;
+    background-color: var(--accent-light);
+    border-radius: 8px;
+    padding: 0.25rem;
+  }
+
+  .est-feature-item h5 {
+    font-family: 'Outfit', sans-serif;
+    color: var(--primary-dark);
+    font-size: 1.05rem;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+  }
+
+  .est-feature-item p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 992px) {
+    .estimation-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    .estimation-widget-col {
+      order: -1; /* Places the lead form card at the very top of the page on mobile */
+      width: 100%;
+    }
+
+    .estimation-content {
+      order: 1;
+    }
+
+    .est-title {
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    .est-lead {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .estimation-page {
+      padding: 2rem 0 4rem 0;
+    }
+  }
+</style>

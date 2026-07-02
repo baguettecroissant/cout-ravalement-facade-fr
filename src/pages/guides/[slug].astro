@@ -1,0 +1,281 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/seo/Breadcrumb.astro';
+import ViteUnDevisWidget from '../../components/affiliation/ViteUnDevisWidget.astro';
+import { guidesList } from '../../data/guides-content';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  return guidesList.map((guide) => ({
+    params: { slug: guide.slug },
+    props: { guide },
+  }));
+}
+
+interface Props {
+  guide: typeof guidesList[0];
+}
+
+const { guide } = Astro.props;
+
+// Find 3 relative guides for cross-linking
+const otherGuides = guidesList
+  .filter((g) => g.slug !== guide.slug)
+  .slice(0, 3);
+
+const breadcrumbs = [
+  { name: "Accueil", url: "/" },
+  { name: "Guides", url: "/guides" },
+  { name: guide.title }
+];
+
+// Schema.org Article JSON-LD
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": guide.title,
+  "description": guide.metaDescription,
+  "category": guide.category,
+  "author": {
+    "@type": "Organization",
+    "name": "Cout-Ravalement-Facade.fr"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Cout-Ravalement-Facade.fr",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://cout-ravalement-facade.fr/images/logo.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": new URL(`/guides/${guide.slug}`, 'https://cout-ravalement-facade.fr').toString()
+  }
+};
+---
+
+<BaseLayout title={guide.metaTitle} description={guide.metaDescription} schema={articleSchema}>
+  <Breadcrumb items={breadcrumbs} />
+
+  <section class="guide-detail-page">
+    <div class="container guide-container">
+      <article class="guide-article">
+        <header class="article-header">
+          <span class="category-badge">{guide.category}</span>
+          <h1 class="article-title">{guide.title}</h1>
+          <p class="article-meta">Temps de lecture : {guide.readTime} | Rédigé par l'équipe rédactionnelle</p>
+        </header>
+
+        <div class="article-banner">
+          <img src={guide.image} alt={guide.title} />
+        </div>
+
+        <div class="article-body" set:html={guide.content}></div>
+
+        <!-- Call to Action Widget inside post -->
+        <div class="article-cta-box">
+          <h3>Estimez le coût de vos travaux de ravalement</h3>
+          <p>Obtenez des devis de façadiers RGE qualifiés locaux de manière totalement gratuite et sans engagement.</p>
+          <ViteUnDevisWidget />
+        </div>
+      </article>
+
+      <!-- Sidebar with other guides -->
+      <aside class="guide-sidebar">
+        <div class="sidebar-box">
+          <h4 class="sidebar-title">Guides recommandés</h4>
+          <div class="sidebar-list">
+            {otherGuides.map((g) => (
+              <a href={`/guides/${g.slug}`} class="sidebar-link">
+                <h5>{g.title}</h5>
+                <span class="sidebar-meta">{g.category}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .guide-detail-page {
+    padding: 4rem 0;
+  }
+
+  .guide-container {
+    display: grid;
+    grid-template-columns: 2.2fr 1fr;
+    gap: 3.5rem;
+    align-items: start;
+  }
+
+  .guide-article {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .article-header {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 1.5rem;
+  }
+
+  .article-banner {
+    width: 100%;
+    height: 360px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 2.5rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+  }
+
+  .article-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (max-width: 768px) {
+    .article-banner {
+      height: 240px;
+    }
+  }
+
+  .category-badge {
+    background-color: var(--accent-light);
+    color: var(--accent-hover);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.35rem 0.75rem;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+
+  .article-title {
+    font-size: 2.25rem;
+    color: var(--primary-dark);
+    line-height: 1.25;
+    margin-bottom: 0.75rem;
+  }
+
+  .article-meta {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .article-body {
+    line-height: 1.7;
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+  }
+
+  .article-body :global(h2) {
+    font-size: 1.6rem;
+    color: var(--primary-dark);
+    margin: 2rem 0 1rem 0;
+  }
+
+  .article-body :global(p) {
+    margin-bottom: 1.25rem;
+  }
+
+  .article-body :global(ul) {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+  }
+
+  .article-body :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  .article-cta-box {
+    margin-top: 3rem;
+    border-top: 2px dashed var(--border);
+    padding-top: 2rem;
+  }
+
+  .article-cta-box h3 {
+    font-size: 1.35rem;
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+  }
+
+  .article-cta-box p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+  }
+
+  /* Sidebar */
+  .guide-sidebar {
+    position: sticky;
+    top: 96px;
+  }
+
+  .sidebar-box {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .sidebar-title {
+    font-size: 1.15rem;
+    color: var(--primary-dark);
+    margin-bottom: 1.25rem;
+    border-bottom: 2px solid var(--border-light);
+    padding-bottom: 0.5rem;
+  }
+
+  .sidebar-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .sidebar-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    color: var(--primary-dark);
+    transition: color 0.2s ease;
+  }
+
+  .sidebar-link h5 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.35;
+    margin-bottom: 0;
+  }
+
+  .sidebar-link:hover {
+    color: var(--accent);
+  }
+
+  .sidebar-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 992px) {
+    .guide-container {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    
+    .guide-sidebar {
+      position: static;
+    }
+  }
+</style>

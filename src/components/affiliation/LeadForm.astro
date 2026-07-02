@@ -1,0 +1,1127 @@
+---
+// src/components/affiliation/LeadForm.astro
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  catId?: number | string; // Defaults to 62 (Facades - enduits)
+}
+
+const { catId = '62' } = Astro.props;
+---
+
+<div class="lead-form-wrapper">
+  <div class="lead-form-card">
+    <div class="lead-form-header">
+      <div class="header-logo">
+        <span class="logo-accent">Devis</span>Façade
+      </div>
+      <h4>Trouvez des Façadiers Qualifiés</h4>
+      <p>Recevez gratuitement jusqu'à 3 devis comparatifs sans engagement</p>
+      
+      <!-- Progress Bar -->
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="vud-progress"></div>
+      </div>
+    </div>
+
+    <!-- Form Element -->
+    <form id="lead-capture-form" class="form-body" novalidate>
+      <input type="hidden" name="cat_id" value={catId} />
+      
+      <!-- STEP 1: TYPE DE BIEN (Auto-advances) -->
+      <div class="form-step active" id="step-1">
+        <h5 class="step-title">Quel est le type de bien à ravaler ?</h5>
+        <div class="options-grid">
+          <button type="button" class="option-btn" data-name="type_bien" data-value="2">
+            <div class="icon-circle">
+              <Icon name="ph:house-line-duotone" class="option-icon" />
+            </div>
+            <span>Maison</span>
+          </button>
+          <button type="button" class="option-btn" data-name="type_bien" data-value="1">
+            <div class="icon-circle">
+              <Icon name="ph:building-duotone" class="option-icon" />
+            </div>
+            <span>Appartement</span>
+          </button>
+          <button type="button" class="option-btn" data-name="type_bien" data-value="3">
+            <div class="icon-circle">
+              <Icon name="ph:buildings-duotone" class="option-icon" />
+            </div>
+            <span>Immeuble</span>
+          </button>
+          <button type="button" class="option-btn" data-name="type_bien" data-value="6">
+            <div class="icon-circle">
+              <Icon name="ph:wrench-duotone" class="option-icon" />
+            </div>
+            <span>Autre / Local</span>
+          </button>
+        </div>
+        <input type="hidden" name="type_bien" id="input-type_bien" value="2" />
+      </div>
+
+      <!-- STEP 2: SITUATION (Auto-advances) -->
+      <div class="form-step" id="step-2">
+        <h5 class="step-title">Quelle est votre situation ?</h5>
+        <div class="options-grid">
+          <button type="button" class="option-btn" data-name="situation" data-value="1">
+            <div class="icon-circle">
+              <Icon name="ph:user-duotone" class="option-icon" />
+            </div>
+            <span>Propriétaire</span>
+          </button>
+          <button type="button" class="option-btn" data-name="situation" data-value="2">
+            <div class="icon-circle">
+              <Icon name="ph:key-duotone" class="option-icon" />
+            </div>
+            <span>Locataire</span>
+          </button>
+          <button type="button" class="option-btn" data-name="situation" data-value="3">
+            <div class="icon-circle">
+              <Icon name="ph:users-duotone" class="option-icon" />
+            </div>
+            <span>Copropriété</span>
+          </button>
+          <button type="button" class="option-btn" data-name="situation" data-value="4">
+            <div class="icon-circle">
+              <Icon name="ph:info-duotone" class="option-icon" />
+            </div>
+            <span>Autre</span>
+          </button>
+        </div>
+        <input type="hidden" name="situation" id="input-situation" value="1" />
+        
+        <div class="button-group-left">
+          <button type="button" class="btn btn-secondary btn-prev">Retour</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: DELAIS (Auto-advances) -->
+      <div class="form-step" id="step-3">
+        <h5 class="step-title">Quand souhaitez-vous lancer les travaux ?</h5>
+        <div class="options-grid">
+          <button type="button" class="option-btn" data-name="delais" data-value="1">
+            <div class="icon-circle">
+              <Icon name="ph:clock-duotone" class="option-icon" />
+            </div>
+            <span>Urgent / Rapide</span>
+          </button>
+          <button type="button" class="option-btn" data-name="delais" data-value="2">
+            <div class="icon-circle">
+              <Icon name="ph:calendar-duotone" class="option-icon" />
+            </div>
+            <span>Sous 6 mois</span>
+          </button>
+          <button type="button" class="option-btn" data-name="delais" data-value="3">
+            <div class="icon-circle">
+              <Icon name="ph:hourglass-duotone" class="option-icon" />
+            </div>
+            <span>Dans l'année</span>
+          </button>
+          <button type="button" class="option-btn" data-name="delais" data-value="4">
+            <div class="icon-circle">
+              <Icon name="ph:info-duotone" class="option-icon" />
+            </div>
+            <span>Plus d'un an</span>
+          </button>
+        </div>
+        <input type="hidden" name="delais" id="input-delais" value="2" />
+        
+        <div class="button-group-left">
+          <button type="button" class="btn btn-secondary btn-prev">Retour</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: SURFACE & DESCRIPTION (Optional description) -->
+      <div class="form-step" id="step-4">
+        <h5 class="step-title">Détails des travaux</h5>
+        
+        <div class="form-group">
+          <label for="surface">Surface approximative de la façade (m²)</label>
+          <div class="input-icon-wrapper">
+            <Icon name="ph:ruler-duotone" class="input-icon" />
+            <input type="number" id="surface" name="surface" placeholder="Ex: 120" min="1" required />
+          </div>
+          <span class="error-msg" id="err-surface"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Informations complémentaires (Facultatif)</label>
+          <textarea 
+            id="description" 
+            name="description" 
+            rows="3" 
+            placeholder="Ex: enduit taloché, isolation par l'extérieur (ITE), fissures à traiter..."
+          ></textarea>
+          <span class="input-hint">Si vous n'indiquez rien, nous générerons une description générique pour vous.</span>
+        </div>
+
+        <div class="button-group dual-buttons">
+          <button type="button" class="btn btn-secondary btn-prev">Retour</button>
+          <button type="button" class="btn btn-primary btn-next">
+            Suivant
+            <Icon name="ph:arrow-right-duotone" class="btn-icon" />
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 5: LOCATION (Auto-city-fill) -->
+      <div class="form-step" id="step-5">
+        <h5 class="step-title">Où se trouve le chantier ?</h5>
+        
+        <div class="form-group">
+          <label for="cp">Code Postal <span class="required">*</span></label>
+          <div class="input-icon-wrapper">
+            <Icon name="ph:map-pin-duotone" class="input-icon" />
+            <input type="text" id="cp" name="cp" placeholder="Ex: 33000" maxlength="5" pattern="[0-9]{5}" required />
+          </div>
+          <span class="error-msg" id="err-cp"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="ville">Ville <span class="required">*</span></label>
+          <div class="select-wrapper">
+            <select id="ville" name="ville" required disabled>
+              <option value="">Entrez d'abord le code postal</option>
+            </select>
+            <Icon name="ph:caret-down-duotone" class="select-arrow" />
+          </div>
+          <span class="error-msg" id="err-ville"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="adresse">Adresse de réalisation du chantier <span class="required">*</span></label>
+          <input type="text" id="adresse" name="adresse" placeholder="Ex: 12 Rue de la Paix" required />
+          <span class="error-msg" id="err-adresse"></span>
+        </div>
+
+        <div class="button-group dual-buttons">
+          <button type="button" class="btn btn-secondary btn-prev">Retour</button>
+          <button type="button" class="btn btn-primary btn-next">Suivant</button>
+        </div>
+      </div>
+
+      <!-- STEP 6: CONTACT & SUBMIT -->
+      <div class="form-step" id="step-6">
+        <h5 class="step-title">Qui doit recevoir les devis ?</h5>
+        
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="prenom">Prénom <span class="required">*</span></label>
+            <input type="text" id="prenom" name="prenom" placeholder="Jean" required />
+            <span class="error-msg" id="err-prenom"></span>
+          </div>
+          <div class="form-group">
+            <label for="nom">Nom <span class="required">*</span></label>
+            <input type="text" id="nom" name="nom" placeholder="Dupont" required />
+            <span class="error-msg" id="err-nom"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Adresse Email <span class="required">*</span></label>
+          <input type="email" id="email" name="email" placeholder="jean.dupont@email.com" required />
+          <span class="error-msg" id="err-email"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="tel">Téléphone <span class="required">*</span></label>
+          <input type="tel" id="tel" name="tel" placeholder="Ex: 0612345678" pattern="^(0[1-9])([0-9]{8})$" required />
+          <span class="error-msg" id="err-tel"></span>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" name="rgpd" required checked />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">
+              J'accepte d'être contacté par des artisans RGE qualifiés pour recevoir mes devis de ravalement, conformément à la politique RGPD.
+            </span>
+          </label>
+          <span class="error-msg" id="err-rgpd"></span>
+        </div>
+
+        <div class="button-group dual-buttons">
+          <button type="button" class="btn btn-secondary btn-prev">Retour</button>
+          <button type="submit" class="btn btn-primary submit-btn">
+            Obtenir mes devis gratuits
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- STEP 7: SPINNER & SUCCESS -->
+    <div class="form-step spinner-step" id="step-spinner">
+      <div class="spinner-content">
+        <div class="spinner-ring"><div></div><div></div><div></div><div></div></div>
+        <h5 id="spinner-title">Enregistrement en cours</h5>
+        <p id="spinner-text">Veuillez patienter pendant que nous transmettons votre demande à nos artisans partenaires...</p>
+        
+        <!-- Target container for ViteUnDevis verification widget (Spinner) -->
+        <div id="vud_spin_328596" class="vud-spin-target"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .lead-form-wrapper {
+    width: 100%;
+    max-width: 580px;
+    margin: 0 auto;
+  }
+
+  .lead-form-card {
+    background-color: var(--card-bg, #ffffff);
+    /* Much more prominent border-top and shadow to make the form pop out from the page content */
+    border: 1px solid rgba(59, 130, 246, 0.18);
+    border-top: 6px solid var(--accent, #3b82f6);
+    border-radius: 20px;
+    box-shadow: 
+      0 20px 50px -12px rgba(15, 23, 42, 0.15), 
+      0 15px 30px -15px rgba(15, 23, 42, 0.1),
+      0 0 0 1px rgba(59, 130, 246, 0.05);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .lead-form-card:hover {
+    box-shadow: 
+      0 30px 60px -15px rgba(15, 23, 42, 0.2), 
+      0 20px 40px -20px rgba(15, 23, 42, 0.12);
+  }
+
+  .lead-form-header {
+    /* Richer, warmer soft blue-indigo background gradient for the header to draw immediate attention */
+    background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+    padding: 2.25rem 2.25rem 1.25rem 2.25rem;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+    text-align: center;
+  }
+
+  .header-logo {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 1.45rem;
+    color: var(--primary-dark, #0f172a);
+    margin-bottom: 0.5rem;
+    display: inline-block;
+  }
+
+  .logo-accent {
+    color: var(--accent, #3b82f6);
+  }
+
+  .lead-form-header h4 {
+    font-family: 'Outfit', sans-serif;
+    color: var(--primary-dark, #0f172a);
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+  }
+
+  .lead-form-header p {
+    font-size: 0.85rem;
+    color: var(--text-secondary, #64748b);
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+    line-height: 1.4;
+  }
+
+  /* Progress Bar */
+  .progress-bar-container {
+    width: 100%;
+    height: 6px;
+    background-color: var(--border, #e2e8f0);
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    width: 16%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent, #3b82f6) 0%, #60a5fa 100%);
+    border-radius: 9999px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Form Body */
+  .form-body {
+    padding: 2.25rem;
+  }
+
+  .form-step {
+    display: none;
+  }
+
+  .form-step.active {
+    display: block;
+    animation: slideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(15px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .step-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--primary-dark, #0f172a);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-dark, #0f172a);
+  }
+
+  .required {
+    color: #ef4444;
+  }
+
+  /* Beautiful Dashboard Option Buttons (Typeform / Modern style) */
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  button.option-btn {
+    appearance: none;
+    -webkit-appearance: none;
+    background: #ffffff;
+    border: 2px solid var(--border, #e2e8f0);
+    border-radius: 16px;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+  }
+
+  button.option-btn:hover {
+    border-color: var(--accent, #3b82f6);
+    background-color: var(--bg-alt, #f8fafc);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+  }
+
+  button.option-btn:active {
+    transform: translateY(0);
+  }
+
+  button.option-btn.selected {
+    border-color: var(--accent, #3b82f6);
+    background-color: var(--accent-light, #eff6ff);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  }
+
+  .icon-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--bg-alt, #f1f5f9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+  }
+
+  button.option-btn:hover .icon-circle {
+    background-color: var(--border, #e2e8f0);
+  }
+
+  button.option-btn.selected .icon-circle {
+    background-color: var(--accent, #3b82f6);
+  }
+
+  .option-icon {
+    width: 28px;
+    height: 28px;
+    color: var(--text-secondary, #64748b);
+    transition: all 0.25s ease;
+  }
+
+  button.option-btn.selected .option-icon {
+    color: #ffffff;
+  }
+
+  button.option-btn span {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--primary-dark, #0f172a);
+    font-family: 'Outfit', sans-serif;
+  }
+
+  /* Inputs & Selects */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1.5px solid var(--border, #e2e8f0);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    color: var(--primary-dark, #0f172a);
+    background-color: var(--card-bg, #ffffff);
+    outline: none;
+    transition: all 0.2s ease;
+    font-family: inherit;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--accent, #3b82f6);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  /* Input Icon Wrapper */
+  .input-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-icon-wrapper .input-icon {
+    position: absolute;
+    left: 1rem;
+    width: 20px;
+    height: 20px;
+    color: var(--text-muted, #94a3b8);
+    pointer-events: none;
+  }
+
+  .input-icon-wrapper input {
+    padding-left: 2.75rem;
+  }
+
+  /* Select Wrapper */
+  .select-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .select-wrapper select {
+    appearance: none;
+    padding-right: 2.5rem;
+  }
+
+  .select-arrow {
+    position: absolute;
+    right: 1rem;
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted, #94a3b8);
+    pointer-events: none;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  .input-hint {
+    font-size: 0.75rem;
+    color: var(--text-muted, #94a3b8);
+  }
+
+  .error-msg {
+    font-size: 0.75rem;
+    color: #ef4444;
+    font-weight: 500;
+    min-height: 1rem;
+    display: block;
+  }
+
+  /* Checkbox */
+  .checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+  }
+
+  .checkbox-label input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  .checkmark {
+    position: relative;
+    height: 18px;
+    width: 18px;
+    background-color: var(--card-bg, #ffffff);
+    border: 1.5px solid var(--border, #e2e8f0);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all 0.2s ease;
+  }
+
+  .checkbox-label:hover input ~ .checkmark {
+    border-color: var(--accent, #3b82f6);
+  }
+
+  .checkbox-label input:checked ~ .checkmark {
+    background-color: var(--accent, #3b82f6);
+    border-color: var(--accent, #3b82f6);
+  }
+
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .checkbox-label input:checked ~ .checkmark:after {
+    display: block;
+  }
+
+  .checkbox-text {
+    font-size: 0.775rem;
+    font-weight: 500;
+    color: var(--text-secondary, #64748b);
+    line-height: 1.4;
+  }
+
+  /* Buttons */
+  .button-group {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .button-group-left {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .dual-buttons {
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .btn {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: none;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent, #3b82f6) 0%, #1d4ed8 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3);
+  }
+
+  .btn-secondary {
+    background-color: var(--bg-alt, #f8fafc);
+    color: var(--text-secondary, #64748b);
+    border: 1.5px solid var(--border, #e2e8f0);
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--border, #e2e8f0);
+    color: var(--primary-dark, #0f172a);
+  }
+
+  .btn-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .submit-btn {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  /* Spinner Step styling */
+  .spinner-step {
+    padding: 3rem 2rem;
+  }
+
+  .spinner-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .spinner-ring {
+    display: inline-block;
+    position: relative;
+    width: 64px;
+    height: 64px;
+  }
+
+  .spinner-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    margin: 8px;
+    border: 4px solid var(--accent, #3b82f6);
+    border-radius: 50%;
+    animation: spinner-ring-anim 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: var(--accent, #3b82f6) transparent transparent transparent;
+  }
+
+  .spinner-ring div:nth-child(1) { animation-delay: -0.45s; }
+  .spinner-ring div:nth-child(2) { animation-delay: -0.3s; }
+  .spinner-ring div:nth-child(3) { animation-delay: -0.15s; }
+
+  @keyframes spinner-ring-anim {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .spinner-content h5 {
+    font-family: 'Outfit', sans-serif;
+    color: var(--primary-dark, #0f172a);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .spinner-content p {
+    font-size: 0.9rem;
+    color: var(--text-secondary, #64748b);
+    max-width: 400px;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .vud-spin-target {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  /* Responsive styling */
+  @media (max-width: 640px) {
+    .form-grid-2 {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    
+    .options-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .form-body {
+      padding: 1.5rem;
+    }
+    
+    .dual-buttons {
+      flex-direction: column-reverse;
+    }
+    
+    .btn {
+      width: 100%;
+    }
+    
+    .submit-btn {
+      max-width: 100%;
+    }
+  }
+</style>
+
+<script is:inline>
+  // Self-contained JavaScript logic for typeform-style multi-step form and validation
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('lead-capture-form');
+    if (!form) return;
+
+    const steps = [
+      document.getElementById('step-1'),
+      document.getElementById('step-2'),
+      document.getElementById('step-3'),
+      document.getElementById('step-4'),
+      document.getElementById('step-5'),
+      document.getElementById('step-6'),
+      document.getElementById('step-spinner')
+    ];
+    const progressBar = document.getElementById('vud-progress');
+    const cpInput = document.getElementById('cp');
+    const villeSelect = document.getElementById('ville');
+    const adresseInput = document.getElementById('adresse');
+    
+    let currentStepIndex = 0;
+
+    // Mapping for user selections to display labels
+    const selectionLabels = {
+      type_bien: { '1': 'appartement', '2': 'maison', '3': 'immeuble', '6': 'bien immobilier' },
+      situation: { '1': 'propriétaire', '2': 'locataire', '3': 'copropriétaire', '4': 'occupant' }
+    };
+
+    // Auto-advance logic on selecting option buttons (Steps 1, 2, 3)
+    const optionBtns = document.querySelectorAll('.option-btn');
+    optionBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const paramName = btn.getAttribute('data-name');
+        const paramVal = btn.getAttribute('data-value');
+        
+        // Save to hidden input
+        const hiddenInput = document.getElementById(`input-${paramName}`);
+        if (hiddenInput) hiddenInput.value = paramVal;
+
+        // Visual feedback: select current button in group
+        document.querySelectorAll(`.option-btn[data-name="${paramName}"]`).forEach(b => {
+          b.classList.remove('selected');
+        });
+        btn.classList.add('selected');
+
+        // Instant auto-advance to next step
+        setTimeout(() => {
+          showStep(currentStepIndex + 1);
+        }, 220);
+      });
+    });
+
+    // Update Progress Bar
+    function updateProgress() {
+      const pct = (currentStepIndex / (steps.length - 2)) * 100;
+      progressBar.style.width = `${Math.min(pct, 100)}%`;
+    }
+
+    // Navigation buttons
+    const nextButtons = document.querySelectorAll('.btn-next');
+    nextButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (validateStep(currentStepIndex)) {
+          showStep(currentStepIndex + 1);
+        }
+      });
+    });
+
+    const prevButtons = document.querySelectorAll('.btn-prev');
+    prevButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        showStep(currentStepIndex - 1);
+      });
+    });
+
+    function showStep(index) {
+      if (index < 0 || index >= steps.length) return;
+      
+      steps[currentStepIndex].classList.remove('active');
+      steps[index].classList.add('active');
+      currentStepIndex = index;
+      
+      updateProgress();
+    }
+
+    // Postal Code autocomplete to Ville via public API
+    let cpCache = {};
+    cpInput.addEventListener('input', async (e) => {
+      const cp = e.target.value.replace(/[^0-9]/g, '');
+      e.target.value = cp;
+      
+      if (cp.length === 5) {
+        if (cpCache[cp]) {
+          populateVilles(cpCache[cp]);
+          return;
+        }
+        
+        try {
+          const response = await fetch(`https://geo.api.gouv.fr/communes?codePostal=${cp}&fields=nom,code&format=json`);
+          if (response.ok) {
+            const data = await response.json();
+            if (data && data.length > 0) {
+              const villes = data.map(item => item.nom);
+              cpCache[cp] = villes;
+              populateVilles(villes);
+              clearError('cp');
+            } else {
+              showError('cp', 'Code postal inconnu');
+              disableVille();
+            }
+          }
+        } catch (err) {
+          console.error('Error fetching cities:', err);
+        }
+      } else {
+        disableVille();
+      }
+    });
+
+    function populateVilles(villes) {
+      villeSelect.innerHTML = '';
+      villes.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v;
+        villeSelect.appendChild(opt);
+      });
+      villeSelect.disabled = false;
+      clearError('ville');
+
+      setTimeout(() => {
+        adresseInput.focus();
+      }, 100);
+    }
+
+    function disableVille() {
+      villeSelect.innerHTML = '<option value="">Entrez d\'abord le code postal</option>';
+      villeSelect.disabled = true;
+    }
+
+    // Validation Logic
+    function showError(fieldId, msg) {
+      const err = document.getElementById(`err-${fieldId}`);
+      if (err) err.textContent = msg;
+      
+      const el = document.getElementById(fieldId);
+      if (el) el.style.borderColor = '#ef4444';
+    }
+
+    function clearError(fieldId) {
+      const err = document.getElementById(`err-${fieldId}`);
+      if (err) err.textContent = '';
+      
+      const el = document.getElementById(fieldId);
+      if (el) el.style.borderColor = '';
+    }
+
+    // Step validation helper
+    function validateStep(stepIndex) {
+      let isValid = true;
+
+      if (stepIndex === 3) {
+        const surface = document.getElementById('surface');
+        if (!surface.value) {
+          showError('surface', 'Veuillez renseigner la surface estimée.');
+          isValid = false;
+        } else if (parseInt(surface.value, 10) <= 0) {
+          showError('surface', 'La surface doit être supérieure à 0.');
+          isValid = false;
+        } else {
+          clearError('surface');
+        }
+      }
+
+      if (stepIndex === 4) {
+        if (cpInput.value.length !== 5) {
+          showError('cp', 'Le code postal doit comporter 5 chiffres.');
+          isValid = false;
+        } else {
+          clearError('cp');
+        }
+
+        if (!villeSelect.value) {
+          showError('ville', 'Veuillez renseigner la ville.');
+          isValid = false;
+        } else {
+          clearError('ville');
+        }
+
+        const adr = document.getElementById('adresse');
+        if (!adr.value.trim()) {
+          showError('adresse', 'L\'adresse est requise.');
+          isValid = false;
+        } else {
+          clearError('adresse');
+        }
+      }
+
+      return isValid;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      let isValid = true;
+      const prenom = document.getElementById('prenom');
+      if (!prenom.value.trim()) {
+        showError('prenom', 'Le prénom est requis.');
+        isValid = false;
+      } else {
+        clearError('prenom');
+      }
+
+      const nom = document.getElementById('nom');
+      if (!nom.value.trim()) {
+        showError('nom', 'Le nom est requis.');
+        isValid = false;
+      } else {
+        clearError('nom');
+      }
+
+      const email = document.getElementById('email');
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!email.value.trim() || !emailPattern.test(email.value)) {
+        showError('email', 'Veuillez saisir une adresse email valide.');
+        isValid = false;
+      } else {
+        clearError('email');
+      }
+
+      const tel = document.getElementById('tel');
+      const telPattern = /^(0[1-9])([0-9]{8})$/;
+      const cleanedTel = tel.value.replace(/[\s.-]/g, '');
+      if (!cleanedTel || !telPattern.test(cleanedTel)) {
+        showError('tel', 'Veuillez saisir un numéro de téléphone valide (ex: 0612345678).');
+        isValid = false;
+      } else {
+        clearError('tel');
+      }
+
+      const rgpd = document.querySelector('input[name="rgpd"]');
+      if (!rgpd.checked) {
+        showError('rgpd', 'L\'acceptation est obligatoire.');
+        isValid = false;
+      } else {
+        clearError('rgpd');
+      }
+
+      if (!isValid) return;
+
+      showStep(6);
+      
+      const formData = new FormData(form);
+      
+      let descriptionVal = document.getElementById('description').value.trim();
+      if (!descriptionVal) {
+        const typeBienLabel = selectionLabels.type_bien[formData.get('type_bien')] || 'bien immobilier';
+        const situationLabel = selectionLabels.situation[formData.get('situation')] || 'propriétaire';
+        const surfaceVal = formData.get('surface');
+        
+        descriptionVal = `Projet de ravalement de façade pour une ${typeBienLabel} d'environ ${surfaceVal} m² de surface. Demande déposée par le ${situationLabel} du bien.`;
+      }
+
+      const payload = {
+        type_bien: formData.get('type_bien'),
+        situation: formData.get('situation'),
+        delais: formData.get('delais'),
+        surface: formData.get('surface'),
+        budget: formData.get('budget'),
+        description: descriptionVal,
+        cp: formData.get('cp'),
+        ville: formData.get('ville'),
+        adresse: formData.get('adresse'),
+        adresse2: formData.get('adresse2'),
+        prenom: formData.get('prenom'),
+        nom: formData.get('nom'),
+        email: formData.get('email'),
+        tel: cleanedTel,
+        cat_id: formData.get('cat_id'),
+        isTest: cleanedTel === '0600000000' || formData.get('cp') === '33260',
+      };
+
+      try {
+        const response = await fetch('/api/lead', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await response.json();
+        
+        if (response.ok && data.success) {
+          document.getElementById('spinner-title').textContent = 'Validation SMS requise';
+          document.getElementById('spinner-text').textContent = 'Pour valider votre demande, veuillez entrer le code reçu par SMS sur votre mobile.';
+          
+          const ring = document.querySelector('.spinner-ring');
+          if (ring) ring.style.display = 'none';
+
+          const devisId = data.devis_id;
+          const devisHash = data.devis_hash;
+          
+          const script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.src = `https://www.viteundevis.com/mb/spinner.php?devis_id=${devisId}&devis_hash=${devisHash}&box=328596`;
+          
+          const target = document.getElementById('vud_spin_328596');
+          if (target) {
+            target.innerHTML = '';
+            target.appendChild(script);
+          }
+        } else {
+          const errorMsg = data.errors ? data.errors.map(e => e.message).join(', ') : (data.error || 'Erreur lors du traitement.');
+          handleSubmissionError(errorMsg);
+        }
+      } catch (err) {
+        console.error('Lead submission error:', err);
+        handleSubmissionError('Une erreur réseau est survenue. Veuillez réessayer.');
+      }
+    });
+
+    function handleSubmissionError(msg) {
+      document.getElementById('spinner-title').textContent = 'Échec de la transmission';
+      document.getElementById('spinner-text').innerHTML = `<span style="color:#ef4444;">${msg}</span>`;
+      
+      const ring = document.querySelector('.spinner-ring');
+      if (ring) ring.style.display = 'none';
+      
+      const content = document.querySelector('.spinner-content');
+      const retryBtn = document.createElement('button');
+      retryBtn.className = 'btn btn-secondary';
+      retryBtn.style.marginTop = '1rem';
+      retryBtn.textContent = 'Corriger mes coordonnées';
+      retryBtn.onclick = () => {
+        if (ring) ring.style.display = 'inline-block';
+        retryBtn.remove();
+        showStep(5);
+      };
+      content.appendChild(retryBtn);
+    }
+  });
+</script>

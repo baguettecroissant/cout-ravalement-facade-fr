@@ -1,0 +1,198 @@
+---
+import { getAllDepartments, getDepartmentSlug } from '../../lib/cities';
+import { guidesList } from '../../data/guides-content';
+
+// Get a few popular departments for the footer
+const popularDepts = getAllDepartments().slice(0, 10);
+const popularGuides = guidesList.slice(0, 5);
+---
+
+<footer id="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-col col-brand">
+      <h3 class="footer-title logo-footer">Cout-Ravalement-Facade<span>.fr</span></h3>
+      <p class="brand-desc">Le guide indépendant de référence sur l'estimation des coûts de ravalement de façade en France. Calculez votre budget avec nos fiches techniques et notre simulateur interactif.</p>
+      <div class="badges">
+        <span class="badge">Artisans RGE</span>
+        <span class="badge">Qualibat</span>
+        <span class="badge">Décennale</span>
+      </div>
+    </div>
+    
+    <div class="footer-col">
+      <h4 class="footer-title">Estimation</h4>
+      <ul class="footer-links">
+        <li><a href="/estimation">Simulateur de budget</a></li>
+        <li><a href="/estimation">Demander des devis</a></li>
+        <li><a href="/faq">FAQ Coûts & Tarifs</a></li>
+        <li><a href="/materiaux">Prix des Matériaux</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-col">
+      <h4 class="footer-title">Guides populaires</h4>
+      <ul class="footer-links">
+        {popularGuides.map((guide) => (
+          <li><a href={`/guides/${guide.slug}`}>{guide.title}</a></li>
+        ))}
+      </ul>
+    </div>
+    
+    <div class="footer-col">
+      <h4 class="footer-title">Départements</h4>
+      <ul class="footer-links dept-links">
+        {popularDepts.map((dept) => (
+          <li>
+            <a href={`/annuaire/${getDepartmentSlug(dept.code, dept.name)}`}>
+              Ravalement {dept.name} ({dept.code})
+            </a>
+          </li>
+        ))}
+        <li><a href="/annuaire" class="view-all">Tous les départements →</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="footer-bottom">
+    <div class="container bottom-container">
+      <p>&copy; {new Date().getFullYear()} Cout-Ravalement-Facade.fr. Tous droits réservés.</p>
+      <div class="bottom-links">
+        <a href="/mentions-legales">Mentions Légales</a>
+        <a href="/sitemap-index.xml">Plan du site</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  #site-footer {
+    background-color: var(--footer-bg);
+    color: var(--footer-text);
+    padding: 4rem 0 0 0;
+    border-top: 3px solid var(--accent);
+    font-size: 0.9rem;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr 1.5fr;
+    gap: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .logo-footer {
+    font-size: 1.25rem;
+    font-family: 'Outfit', sans-serif;
+    color: #ffffff;
+    font-weight: 800;
+  }
+
+  .logo-footer span {
+    color: var(--accent);
+  }
+
+  .footer-title {
+    color: #ffffff;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .brand-desc {
+    color: var(--footer-text);
+    line-height: 1.6;
+    font-size: 0.85rem;
+  }
+
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .badge {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .footer-links a {
+    color: var(--footer-text);
+    transition: color 0.2s ease;
+  }
+
+  .footer-links a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+  }
+
+  .view-all {
+    font-weight: 600;
+    color: var(--accent) !important;
+  }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 1.5rem 0;
+    margin-top: 2rem;
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .bottom-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .bottom-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .bottom-links a {
+    color: var(--footer-text);
+  }
+
+  .bottom-links a:hover {
+    color: #ffffff;
+  }
+
+  @media (max-width: 992px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .bottom-container {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+</style>

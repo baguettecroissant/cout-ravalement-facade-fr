@@ -1,0 +1,12 @@
+# cout-ravalement-facade.fr
+
+Calculateur de coût de ravalement de façade en France (simulateur interactif, fiches techniques de matériaux, guides travaux, et annuaire des départements).
+
+## Structure des liens
+- / : Page d'accueil avec simulateur de budget de travaux.
+- /estimation : Formulaire de demande de devis en partenariat avec ViteUnDevis (Category #62).
+- /guides : Liste des 12 guides de travaux sur la réglementation, les prix poste par poste, la copropriété et la météo idéale.
+- /materiaux : Comparatif technique des 8 types de revêtements (monocouche, chaux, bardage, ITE).
+- /annuaire : Liste des 96 départements français avec leurs fiches de travaux locales.
+- /faq : FAQ générale sur l'entretien des murs.
+- /mentions-legales : Conditions légales.

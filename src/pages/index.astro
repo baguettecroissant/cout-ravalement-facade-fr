@@ -1,0 +1,624 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AnimatedCounter from '../components/ui/AnimatedCounter.astro';
+import FaqAccordion from '../components/ui/FaqAccordion.astro';
+import Icon from '../components/ui/Icon.astro';
+import LeadForm from '../components/affiliation/LeadForm.astro';
+import { materialsList } from '../data/materials';
+import { guidesList } from '../data/guides-content';
+import { getAllDepartments, getDepartmentSlug } from '../lib/cities';
+
+const topDepts = getAllDepartments().slice(0, 12);
+const recentGuides = guidesList.slice(0, 4);
+
+// General FAQ list for homepage
+const generalFAQ = [
+  {
+    question: "Quel est le coût réel d'un ravalement de façade au m² ?",
+    answer: "En France, les tarifs oscillent généralement entre 30 € et 60 € / m² pour un enduit projeté monocouche basique. Comptez de 50 € à 90 € / m² pour un enduit traditionnel 3 couches et de 60 € à 110 € / m² pour un traitement respirant à la chaux naturelle."
+  },
+  {
+    question: "Quelle est la différence de coût avec une isolation extérieure (ITE) ?",
+    answer: "Une isolation thermique extérieure (ITE) sous enduit coûte plus cher à la pose, entre 100 € et 180 € / m². Toutefois, elle est éligible aux subventions d'État MaPrimeRénov' et aux aides régionales qui réduisent drastiquement le reste à charge final, tout en éliminant vos pertes de chaleur."
+  },
+  {
+    question: "Combien de temps faut-il prévoir pour les travaux de façade ?",
+    answer: "Le ravalement d'une maison de plain-pied ou avec étage de 100 m² de murs s'étale en moyenne sur 1 à 2 semaines selon la météo. Pour les immeubles en copropriété, la durée du chantier peut atteindre 4 à 8 semaines."
+  },
+  {
+    question: "Quelle TVA s'applique sur un chantier de ravalement ?",
+    answer: "Sur un logement construit depuis plus de 2 ans, le taux de TVA est réduit à 10% sur les fournitures et la main d'œuvre pour un ravalement simple. Si le projet intègre une isolation thermique extérieure respectant les performances réglementaires, la TVA descend à 5,5%."
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Coût Ravalement Façade",
+  "url": "https://cout-ravalement-facade.fr",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://cout-ravalement-facade.fr/search?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+};
+---
+
+<BaseLayout 
+  title="Coût Ravalement de Façade 2026 — Simulateur & Devis Gratuit"
+  description="Découvrez le coût réel d'un ravalement de façade en France. Utilisez notre simulateur de budget gratuit, comparez les prix au m² et contactez des artisans RGE."
+  schema={schema}
+>
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="container hero-grid">
+      <div class="hero-left">
+        <span class="hero-tag animate-pulse">✅ Devis 100% Gratuits 2026</span>
+        <h1 class="hero-h1">Calculez le Coût Réel de Votre Ravalement de Façade</h1>
+        <p class="hero-p">Comparez les tarifs des artisans façadiers RGE et recevez jusqu\'à 3 propositions détaillées sans engagement pour vos travaux.</p>
+        
+        <div class="hero-stats">
+          <AnimatedCounter targetValue={35240} label="Devis demandés" />
+          <AnimatedCounter targetValue={98} label="Artisans Qualifiés RGE" />
+        </div>
+      </div>
+      
+      <div class="hero-right">
+        <LeadForm catId="62" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Materials & Techniques -->
+  <section class="section-materials">
+    <div class="container">
+      <div class="section-header">
+        <h2>Systèmes & Matériaux : Trouvez la Solution Adaptée</h2>
+        <p>Un ravalement réussi dépend avant tout du choix technique appliqué sur votre maçonnerie portante.</p>
+      </div>
+      
+      <div class="materials-grid">
+        {materialsList.map((mat) => (
+          <div class="material-card">
+            <div class="mat-card-header">
+              <h4>{mat.name}</h4>
+              <span class="mat-price mono">{mat.costRange}</span>
+            </div>
+            <p class="mat-desc">{mat.idealUse}</p>
+            <ul class="mat-bullets">
+              <li><strong>Durabilité :</strong> {mat.durability}</li>
+              <li><strong>Support :</strong> {mat.supportCompatibility.split('.')[0]}</li>
+            </ul>
+            <a href={`/materiaux/${mat.slug}`} class="mat-link">
+              <span>Fiche technique complète</span>
+              <Icon name="ph:arrow-right-duotone" class="mat-link-icon" />
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Guides & Resources Section -->
+  <section class="section-guides">
+    <div class="container">
+      <div class="section-header">
+        <h2>Nos Guides Pratiques pour Préparer Vos Travaux</h2>
+        <p>Normes techniques, aides financières et conseils de syndic de copropriété.</p>
+      </div>
+      
+      <div class="guides-grid">
+        {recentGuides.map((guide) => (
+          <div class="guide-card">
+            <div class="guide-image">
+              <img src={guide.image} alt={guide.title} loading="lazy" />
+            </div>
+            <div class="guide-body">
+              <span class="guide-category">{guide.category}</span>
+              <h4>{guide.title}</h4>
+              <p class="guide-summary">{guide.summary}</p>
+            </div>
+            <div class="guide-footer">
+              <span class="read-time"><Icon name="ph:ruler-duotone" class="clock-icon" /> {guide.readTime}</span>
+              <a href={`/guides/${guide.slug}`} class="btn-read">Lire l'article</a>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <div class="center-cta">
+        <a href="/guides" class="btn btn-secondary">Voir tous nos guides de travaux →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section-faq">
+    <div class="container">
+      <div class="section-header">
+        <h2>Foire Aux Questions : Coûts, Artisans et Garanties</h2>
+        <p>Tout ce qu'il faut savoir avant de signer le devis d'un façadier.</p>
+      </div>
+      
+      <div class="faq-accordion-container">
+        <FaqAccordion faqItems={generalFAQ} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Departments Map/Grid for Local SEO -->
+  <section class="section-local">
+    <div class="container">
+      <div class="section-header">
+        <h2>Trouvez un Façadier RGE par Département</h2>
+        <p>Sélectionnez votre région pour consulter les spécificités d'urbanisme locales et obtenir des devis d'artisans proches de chez vous.</p>
+      </div>
+      
+      <div class="depts-grid">
+        {topDepts.map((dept) => (
+          <a href={`/annuaire/${getDepartmentSlug(dept.code, dept.name)}`} class="dept-card">
+            <Icon name="ph:map-pin-duotone" class="dept-pin" />
+            <span class="dept-name">Ravalement {dept.name}</span>
+            <span class="dept-code mono">({dept.code})</span>
+          </a>
+        ))}
+      </div>
+      
+      <div class="center-cta">
+        <a href="/annuaire" class="btn btn-secondary">Tous les départements français →</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Hero Styles */
+  .hero-section {
+    position: relative;
+    background-color: var(--primary-dark);
+    background-image: url('/images/hero-ravalement.png');
+    background-size: cover;
+    background-position: center;
+    padding: 6rem 0;
+    color: #ffffff;
+    overflow: hidden;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--hero-gradient);
+    z-index: 1;
+  }
+
+  .hero-grid {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .hero-tag {
+    background-color: var(--accent);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.35rem 0.85rem;
+    border-radius: 20px;
+    width: fit-content;
+    display: block;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    animation: badge-pulse 2.5s infinite;
+  }
+
+  .hero-h1 {
+    font-size: 3rem;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+    line-height: 1.15;
+    font-weight: 800;
+  }
+
+  .hero-p {
+    font-size: 1.15rem;
+    color: var(--footer-text);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  /* Simulator Card */
+  .sim-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+    color: var(--text);
+  }
+
+  .sim-title {
+    font-size: 1.3rem;
+    color: var(--primary-dark);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .sim-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .sim-field label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  .slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    outline: none;
+    margin: 0.5rem 0;
+  }
+
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+
+  .slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+  }
+
+  .select-field {
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background-color: var(--bg);
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--text);
+    outline: none;
+    cursor: pointer;
+  }
+
+  .sim-result-box {
+    background-color: var(--bg-alt);
+    border-radius: 8px;
+    padding: 1.25rem;
+    text-align: center;
+    margin: 1.5rem 0;
+    border: 1px dashed var(--border);
+  }
+
+  .result-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+  }
+
+  .result-price {
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.25rem;
+    animation: price-glow 4s infinite ease-in-out;
+  }
+
+  .result-disclaimer {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0;
+  }
+
+  .sim-cta {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .cta-arrow {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Materials & Sections */
+  .section-materials, .section-guides, .section-faq, .section-local {
+    padding: 5rem 0;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .section-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 3.5rem auto;
+  }
+
+  .section-header h2 {
+    font-size: 2.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .section-header p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+  }
+
+  /* Materials Cards */
+  .materials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+
+  .material-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s ease;
+    border-top: 3px solid var(--accent);
+  }
+
+  .material-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .mat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 0.75rem;
+  }
+
+  .mat-card-header h4 {
+    font-size: 1.15rem;
+    color: var(--primary-dark);
+    margin-bottom: 0;
+  }
+
+  .mat-price {
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .mat-desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    flex-grow: 1;
+    margin-bottom: 1.25rem;
+  }
+
+  .mat-bullets {
+    list-style: none;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .mat-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .mat-link-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+  }
+
+  .mat-link:hover .mat-link-icon {
+    transform: translateX(3px);
+  }
+
+  /* Guides Cards */
+  .guides-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .guide-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .guide-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent);
+  }
+
+  .guide-image {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    background-color: var(--bg-alt);
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .guide-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .guide-card:hover .guide-image img {
+    transform: scale(1.05);
+  }
+
+  .guide-body {
+    padding: 1.5rem;
+    flex-grow: 1;
+  }
+
+  .guide-category {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .guide-card h4 {
+    font-size: 1.15rem;
+    line-height: 1.35;
+    margin-bottom: 0.75rem;
+    color: var(--primary-dark);
+  }
+
+  .guide-summary {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 0;
+  }
+
+  .guide-footer {
+    padding: 1rem 1.5rem;
+    background-color: var(--bg-alt);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+  }
+
+  .read-time {
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .clock-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .btn-read {
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .center-cta {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  /* FAQ Styles */
+  .faq-accordion-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  /* Local SEO Map */
+  .depts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 3rem;
+  }
+
+  .dept-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: var(--shadow-sm);
+    color: var(--primary-dark);
+    transition: all 0.2s ease;
+  }
+
+  .dept-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow);
+    color: var(--accent);
+  }
+
+  .dept-pin {
+    width: 20px;
+    height: 20px;
+    color: var(--accent);
+  }
+
+  .dept-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    flex-grow: 1;
+  }
+
+  .dept-code {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  /* Responsive Grid layouts */
+  @media (max-width: 992px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    
+    .hero-h1 {
+      font-size: 2.5rem;
+    }
+  }
+</style>
+

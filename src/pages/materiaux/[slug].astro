@@ -1,0 +1,378 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/seo/Breadcrumb.astro';
+import ViteUnDevisWidget from '../../components/affiliation/ViteUnDevisWidget.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { materialsList } from '../../data/materials';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  return materialsList.map((material) => ({
+    params: { slug: material.slug },
+    props: { material },
+  }));
+}
+
+interface Props {
+  material: typeof materialsList[0];
+}
+
+const { material } = Astro.props;
+
+const breadcrumbs = [
+  { name: "Accueil", url: "/" },
+  { name: "Matériaux", url: "/materiaux" },
+  { name: material.name }
+];
+
+// Split prices to obtain low and high bounds
+const rawPriceStr = material.costRange.replace('€ / m²', '').trim();
+const [lowStr, highStr] = rawPriceStr.split('—').map((x) => x.trim());
+const lowPriceVal = parseInt(lowStr) || 30;
+const highPriceVal = parseInt(highStr) || 60;
+
+// Schema.org Product JSON-LD
+const productSchema = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": material.name,
+  "description": material.idealUse,
+  "offers": {
+    "@type": "AggregateOffer",
+    "priceCurrency": "EUR",
+    "lowPrice": lowPriceVal,
+    "highPrice": highPriceVal,
+    "priceValuedMed": "EUR",
+    "unitText": "m²"
+  }
+};
+---
+
+<BaseLayout title={material.title} description={material.idealUse} schema={productSchema}>
+  <Breadcrumb items={breadcrumbs} />
+
+  <section class="material-detail-page">
+    <div class="container mat-detail-container">
+      <div class="mat-detail-main">
+        <h1 class="mat-h1">{material.name} pour façade</h1>
+        
+        <div class="mat-highlight-row">
+          <div class="highlight-item">
+            <span class="hl-label">Coût moyen m²</span>
+            <span class="hl-val mono">{material.costRange}</span>
+          </div>
+          <div class="highlight-item">
+            <span class="hl-label">Durabilité estimée</span>
+            <span class="hl-val">{material.durability}</span>
+          </div>
+        </div>
+
+        <div class="mat-content-section">
+          <h2>Caractéristiques techniques</h2>
+          
+          <table class="spec-table">
+            <tbody>
+              <tr>
+                <td><strong>Composition</strong></td>
+                <td>{material.specifications.composition}</td>
+              </tr>
+              <tr>
+                <td><strong>Épaisseur réglementaire</strong></td>
+                <td>{material.specifications.thickness}</td>
+              </tr>
+              <tr>
+                <td><strong>Finitions courantes</strong></td>
+                <td>{material.specifications.finishes}</td>
+              </tr>
+              <tr>
+                <td><strong>Compatibilité support</strong></td>
+                <td>{material.supportCompatibility}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mat-content-section">
+          <h2>Comparatif des grandes marques de fabricants</h2>
+          <p>Voici les fourchettes tarifaires des solutions prêtes à l'emploi par fabricant :</p>
+          <div class="brands-list">
+            {material.brands.map((brand) => (
+              <div class="brand-item">
+                <span class="brand-name"><strong>{brand.name}</strong></span>
+                <span class="brand-price mono">{brand.price}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="mat-content-section pros-cons-section">
+          <div class="pro-con-col">
+            <h3 class="pro-title"><Icon name="ph:shield-check-duotone" class="pro-icon" /> Avantages</h3>
+            <ul>
+              {material.pros.map((pro) => (
+                <li>{pro}</li>
+              ))}
+            </ul>
+          </div>
+          <div class="pro-con-col">
+            <h3 class="con-title"><Icon name="ph:warning-duotone" class="con-icon" /> Inconvénients</h3>
+            <ul>
+              {material.cons.map((con) => (
+                <li>{con}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div class="mat-content-section">
+          <h2>Obtenez des devis pour poser un {material.name.toLowerCase()}</h2>
+          <p>Les tarifs réels dépendent de la complexité de votre façade, de la hauteur de votre bâtiment et de l'accessibilité locale. Faites une demande gratuite d'estimation :</p>
+          <ViteUnDevisWidget />
+        </div>
+      </div>
+      
+      <div class="mat-detail-sidebar">
+        <div class="cta-sidebar-box">
+          <h4>Estimer en 2 minutes</h4>
+          <p>Remplissez notre formulaire pour recevoir jusqu'à 3 offres personnalisées d'artisans façadiers Qualibat de votre région.</p>
+          <a href="/estimation" class="btn btn-primary sidebar-cta-btn">Lancer l'estimation</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .material-detail-page {
+    padding: 4rem 0;
+  }
+
+  .mat-detail-container {
+    display: grid;
+    grid-template-columns: 2.2fr 1fr;
+    gap: 3.5rem;
+    align-items: start;
+  }
+
+  .mat-detail-main {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .mat-h1 {
+    font-size: 2.25rem;
+    color: var(--primary-dark);
+    line-height: 1.2;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--border-light);
+    padding-bottom: 0.75rem;
+  }
+
+  .mat-highlight-row {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .highlight-item {
+    flex: 1;
+    min-width: 150px;
+    background-color: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .hl-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+  }
+
+  .hl-val {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .mat-content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .mat-content-section h2 {
+    font-size: 1.5rem;
+    color: var(--primary-dark);
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 0.5rem;
+  }
+
+  .spec-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+
+  .spec-table td {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--text-secondary);
+  }
+
+  .spec-table tr:nth-child(even) td {
+    background-color: var(--bg-alt);
+  }
+
+  .brands-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .brand-item {
+    background-color: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.85rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+  }
+
+  .brand-name {
+    color: var(--primary-dark);
+  }
+
+  .brand-price {
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  /* Pros Cons */
+  .pros-cons-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .pro-con-col h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .pro-title {
+    color: var(--success);
+  }
+
+  .con-title {
+    color: var(--danger);
+  }
+
+  .pro-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--success);
+  }
+
+  .con-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--danger);
+  }
+
+  .pro-con-col ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .pro-con-col li {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    position: relative;
+    padding-left: 1.25rem;
+  }
+
+  .pro-con-col li::before {
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+  }
+
+  .pro-title + ul li::before {
+    content: "✓";
+    color: var(--success);
+  }
+
+  .con-title + ul li::before {
+    content: "✗";
+    color: var(--danger);
+  }
+
+  /* Sidebar */
+  .mat-detail-sidebar {
+    position: sticky;
+    top: 96px;
+  }
+
+  .cta-sidebar-box {
+    background-color: var(--primary-dark);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+
+  .cta-sidebar-box h4 {
+    color: #ffffff;
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .cta-sidebar-box p {
+    color: var(--footer-text);
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+
+  .sidebar-cta-btn {
+    width: 100%;
+    padding: 0.85rem;
+  }
+
+  @media (max-width: 992px) {
+    .mat-detail-container {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    
+    .mat-detail-sidebar {
+      position: static;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .pros-cons-section {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+</style>

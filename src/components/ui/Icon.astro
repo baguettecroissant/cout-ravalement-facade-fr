@@ -1,0 +1,53 @@
+---
+/**
+ * Drop-in replacement for astro-icon's <Icon> component.
+ * Loads icons directly from @iconify-json packages via @iconify/utils,
+ * bypassing the broken virtual:astro-icon module (incompatible with Vite 8).
+ */
+import { getIconData, iconToSVG } from '@iconify/utils';
+import type { IconifyJSON } from '@iconify/types';
+import type { HTMLAttributes } from 'astro/types';
+
+// Import the icon collections directly
+// @ts-ignore - JSON import
+import phIcons from '@iconify-json/ph/icons.json';
+
+const collections: Record<string, IconifyJSON> = {
+  ph: phIcons as IconifyJSON,
+};
+
+interface Props extends HTMLAttributes<'svg'> {
+  name: string;
+  title?: string;
+  desc?: string;
+  size?: number | string;
+}
+
+const { name = '', title, desc, size, ...props } = Astro.props;
+
+let [setName, iconName] = name.includes(':') ? name.split(':') : ['local', name];
+
+const collection = collections[setName];
+if (!collection) {
+  throw new Error(`[Icon] Unknown icon set "${setName}". Available: ${Object.keys(collections).join(', ')}`);
+}
+
+const iconData = getIconData(collection, iconName);
+if (!iconData) {
+  throw new Error(`[Icon] Icon "${iconName}" not found in "${setName}" set.`);
+}
+
+if (size) {
+  props.width = size;
+  props.height = size;
+}
+
+const renderData = iconToSVG(iconData);
+const normalizedProps = { ...renderData.attributes, ...props };
+---
+
+<svg {...normalizedProps} data-icon={name}>
+  {title && <title>{title}</title>}
+  {desc && <desc>{desc}</desc>}
+  <Fragment set:html={renderData.body} />
+</svg>

@@ -1,0 +1,273 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/seo/Breadcrumb.astro';
+import ViteUnDevisWidget from '../../components/affiliation/ViteUnDevisWidget.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { getAllDepartments, getCitiesByDepartment, getDepartmentSlug } from '../../lib/cities';
+import type { DepartmentInfo } from '../../lib/cities';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const depts = getAllDepartments();
+  return depts.map((dept) => {
+    const slug = getDepartmentSlug(dept.code, dept.name);
+    return {
+      params: { slug },
+      props: { dept },
+    };
+  });
+}
+
+interface Props {
+  dept: DepartmentInfo;
+}
+
+const { dept } = Astro.props;
+
+// Get all cities of this department
+const cities = getCitiesByDepartment(dept.code);
+
+// Sort cities by population or name
+cities.sort((a, b) => (b.population || 0) - (a.population || 0));
+
+const breadcrumbs = [
+  { name: "Accueil", url: "/" },
+  { name: "Annuaire", url: "/annuaire" },
+  { name: `Artisans ${dept.name}` }
+];
+---
+
+<BaseLayout
+  title={`Artisans Façadiers en ${dept.name} (${dept.code}) — Tarifs Ravalement 2026`}
+  description={`Trouvez un artisan façadier qualifié RGE en ${dept.name} (${dept.code}). Devis et estimations gratuites de ravalement dans toutes les villes du département.`}
+>
+  <Breadcrumb items={breadcrumbs} />
+
+  <section class="dept-detail-page">
+    <div class="container dept-container">
+      <div class="dept-main">
+        <h1 class="dept-h1">Ravalement de façade en {dept.name} ({dept.code})</h1>
+        
+        <div class="dept-lead-box">
+          <p>Vous envisagez des travaux de rénovation de façade dans le département <strong>{dept.name} ({dept.code})</strong> ? Découvrez les spécificités réglementaires locales, les aides territoriales disponibles et accédez aux estimations de prix pour chaque commune.</p>
+        </div>
+
+        {dept.aide_locale && (
+          <div class="dept-aides-card">
+            <div class="aides-header">
+              <Icon name="ph:certificate-duotone" class="aides-icon" />
+              <h3>Aides locales et subventions en {dept.name}</h3>
+            </div>
+            <p class="aides-text">{dept.aide_locale}</p>
+          </div>
+        )}
+
+        <div class="dept-cities-section">
+          <h2>Estimer le coût par ville en {dept.name}</h2>
+          <p>Sélectionnez votre commune pour obtenir une estimation budgétaire locale et découvrir les artisans façadiers qualifiés RGE actifs dans votre zone :</p>
+          
+          <div class="cities-grid">
+            {cities.map((city) => (
+              <a href={`/ravalement/${city.slug}`} class="city-link">
+                <span>Ravalement {city.name}</span>
+                <span class="city-zip mono">{city.zip}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div class="dept-cta-section">
+          <h2>Demande d'estimation gratuite en {dept.name}</h2>
+          <p>Pour obtenir des devis comparatifs d'artisans façadiers Qualibat agréés du {dept.code}, remplissez notre simulateur de projet en ligne :</p>
+          <ViteUnDevisWidget />
+        </div>
+      </div>
+      
+      <div class="dept-sidebar">
+        <div class="sidebar-info-box">
+          <h4>Région {dept.region}</h4>
+          <p>Les conditions climatiques de la région <strong>{dept.region}</strong> influencent fortement le choix technique des enduits et crépis. Il est recommandé de faire appel à des artisans locaux maîtrisant les exigences constructives de votre zone.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .dept-detail-page {
+    padding: 4rem 0;
+  }
+
+  .dept-container {
+    display: grid;
+    grid-template-columns: 2.2fr 1fr;
+    gap: 3.5rem;
+    align-items: start;
+  }
+
+  .dept-main {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .dept-h1 {
+    font-size: 2.25rem;
+    color: var(--primary-dark);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border-light);
+    padding-bottom: 0.75rem;
+  }
+
+  .dept-lead-box {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+  }
+
+  .dept-aides-card {
+    background-color: var(--primary-light);
+    border-left: 4px solid var(--primary);
+    border-radius: 0 8px 8px 0;
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .aides-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .aides-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--primary);
+  }
+
+  .aides-header h3 {
+    font-size: 1.15rem;
+    color: var(--primary-dark);
+    margin-bottom: 0;
+  }
+
+  .aides-text {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    margin-bottom: 0;
+  }
+
+  .dept-cities-section {
+    margin-bottom: 3rem;
+  }
+
+  .dept-cities-section h2 {
+    font-size: 1.5rem;
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 0.5rem;
+  }
+
+  .dept-cities-section p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+  }
+
+  .cities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem;
+    max-height: 450px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    background-color: var(--bg-alt);
+  }
+
+  .city-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.65rem 0.85rem;
+    font-size: 0.85rem;
+    color: var(--primary-dark);
+    transition: all 0.2s ease;
+  }
+
+  .city-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateX(2px);
+  }
+
+  .city-zip {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .dept-cta-section h2 {
+    font-size: 1.5rem;
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 0.5rem;
+  }
+
+  .dept-cta-section p {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Sidebar */
+  .dept-sidebar {
+    position: sticky;
+    top: 96px;
+  }
+
+  .sidebar-info-box {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .sidebar-info-box h4 {
+    font-size: 1.15rem;
+    color: var(--primary-dark);
+    margin-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border-light);
+    padding-bottom: 0.5rem;
+  }
+
+  .sidebar-info-box p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 992px) {
+    .dept-container {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    
+    .dept-sidebar {
+      position: static;
+    }
+  }
+</style>

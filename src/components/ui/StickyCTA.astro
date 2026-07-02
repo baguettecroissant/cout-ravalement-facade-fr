@@ -1,0 +1,123 @@
+---
+import Icon from './Icon.astro';
+---
+
+<div id="sticky-cta-bar" class="sticky-cta-wrapper">
+  <div class="sticky-cta-container">
+    <div class="sticky-cta-text">
+      <span class="cta-price-badge">Devis Gratuit 2 min</span>
+      <p class="cta-p">Comparez les artisans façadiers locaux</p>
+    </div>
+    <a href="/estimation" class="btn btn-primary cta-btn">
+      <span>Estimer</span>
+      <Icon name="ph:arrow-right-duotone" class="btn-arrow" />
+    </a>
+  </div>
+</div>
+
+<style>
+  .sticky-cta-wrapper {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(15, 23, 42, 0.95); /* Deep slate to match theme */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 2px solid var(--accent, #3b82f6);
+    padding: 0.65rem 0;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
+    z-index: 99;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .sticky-cta-wrapper.visible {
+    transform: translateY(0);
+  }
+
+  .sticky-cta-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .sticky-cta-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    color: #ffffff;
+    min-width: 0; /* Crucial for text truncation in flexbox */
+    flex: 1;
+  }
+
+  .cta-price-badge {
+    font-size: 0.65rem;
+    background-color: var(--accent, #3b82f6);
+    color: #ffffff;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    font-weight: 700;
+    width: fit-content;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .cta-p {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+  }
+
+  .cta-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    border-radius: 8px;
+    white-space: nowrap;
+    flex-shrink: 0; /* Prevent the button from shrinking or wrapping */
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+  }
+
+  .btn-arrow {
+    width: 14px;
+    height: 14px;
+  }
+
+  @media (min-width: 769px) {
+    /* Hide on desktop */
+    .sticky-cta-wrapper {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  const ctaBar = document.getElementById('sticky-cta-bar');
+  
+  window.addEventListener('scroll', () => {
+    // Show only after scrolling 300px and when not near the very bottom/footer
+    const scrollPos = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight;
+    const winHeight = window.innerHeight;
+    
+    const isNearBottom = docHeight - (scrollPos + winHeight) < 250;
+    
+    if (scrollPos > 300 && !isNearBottom) {
+      ctaBar?.classList.add('visible');
+    } else {
+      ctaBar?.classList.remove('visible');
+    }
+  });
+</script>

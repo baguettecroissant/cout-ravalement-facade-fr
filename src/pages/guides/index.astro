@@ -1,0 +1,167 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/seo/Breadcrumb.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { guidesList } from '../../data/guides-content';
+
+const breadcrumbs = [
+  { name: "Accueil", url: "/" },
+  { name: "Guides Travaux" }
+];
+---
+
+<BaseLayout
+  title="Guides et Conseils de Ravalement de Façade — Estimations 2026"
+  description="Consultez nos 12 guides pratiques rédigés par nos experts en rénovation : budget, aides de l'État, réglementation, ITE et diagnostics techniques."
+>
+  <Breadcrumb items={breadcrumbs} />
+
+  <section class="guides-index-page">
+    <div class="container">
+      <div class="section-header">
+        <h1>Guides Techniques & Budgétaires</h1>
+        <p>Retrouvez toutes les clés pour réussir vos travaux de façade : réglementation, choix de l'artisan RGE et maîtrise du budget.</p>
+      </div>
+
+      <div class="guides-grid">
+        {guidesList.map((guide) => (
+          <div class="guide-card">
+            <div class="guide-image">
+              <img src={guide.image} alt={guide.title} loading="lazy" />
+            </div>
+            <div class="guide-body">
+              <span class="guide-category">{guide.category}</span>
+              <h3>{guide.title}</h3>
+              <p class="guide-summary">{guide.summary}</p>
+            </div>
+            <div class="guide-footer">
+              <span class="read-time"><Icon name="ph:ruler-duotone" class="clock-icon" /> {guide.readTime}</span>
+              <a href={`/guides/${guide.slug}`} class="btn-read-more">Consulter le guide →</a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .guides-index-page {
+    padding: 5rem 0;
+  }
+
+  .section-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 4rem auto;
+  }
+
+  .section-header h1 {
+    font-size: 2.5rem;
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+  }
+
+  .section-header p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+  }
+
+  .guides-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2.5rem;
+  }
+
+  .guide-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .guide-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent);
+  }
+
+  .guide-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background-color: var(--bg-alt);
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .guide-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .guide-card:hover .guide-image img {
+    transform: scale(1.05);
+  }
+
+  .guide-body {
+    padding: 2rem;
+    flex-grow: 1;
+  }
+
+  .guide-category {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+
+  .guide-card h3 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    color: var(--primary-dark);
+  }
+
+  .guide-summary {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 0;
+  }
+
+  .guide-footer {
+    padding: 1.25rem 2rem;
+    background-color: var(--bg-alt);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+  }
+
+  .read-time {
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .clock-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .btn-read-more {
+    font-weight: 700;
+    color: var(--accent);
+  }
+</style>

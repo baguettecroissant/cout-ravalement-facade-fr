@@ -1,0 +1,118 @@
+---
+---
+
+<div id="mobile-menu" class="mobile-menu-overlay">
+  <nav class="mobile-menu-nav">
+    <a href="/estimation" class="menu-item">Obtenir un Devis</a>
+    <a href="/guides" class="menu-item">Guides Pratiques</a>
+    <a href="/materiaux" class="menu-item">Fiches Matériaux</a>
+    <a href="/annuaire" class="menu-item">Annuaire Façadiers</a>
+    <a href="/faq" class="menu-item">FAQ Générale</a>
+    
+    <a href="/estimation" class="btn btn-primary menu-cta">Demander un Devis Gratuit</a>
+  </nav>
+</div>
+
+<style>
+  .mobile-menu-overlay {
+    position: fixed;
+    top: 72px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 72px);
+    background-color: var(--card-bg, #ffffff);
+    z-index: 99;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+    transform: translateX(100%);
+    visibility: hidden; /* Physically hides the element from overflow/interaction when closed */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-top: 1px solid var(--border, #e2e8f0);
+    box-sizing: border-box;
+  }
+
+  .mobile-menu-overlay.active {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .mobile-menu-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .menu-item {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-dark, #0f172a);
+    border-bottom: 1px solid var(--border-light, #f1f5f9);
+    padding-bottom: 0.75rem;
+    transition: color 0.2s ease;
+  }
+
+  .menu-item:hover, .menu-item:active {
+    color: var(--accent, #3b82f6);
+  }
+
+  .menu-cta {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 769px) {
+    /* Hide on desktop completely to prevent any horizontal page scrolling */
+    .mobile-menu-overlay {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  const toggleBtn = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  toggleBtn?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('active');
+    toggleBtn.classList.toggle('active');
+    
+    // Lock/unlock body scroll when menu is active
+    if (mobileMenu?.classList.contains('active')) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    
+    // Animate burger bars
+    const bars = toggleBtn.querySelectorAll('.burger-bar');
+    if (toggleBtn.classList.contains('active')) {
+      (bars[0] as HTMLElement).style.transform = 'rotate(45deg) translate(6px, 6px)';
+      (bars[1] as HTMLElement).style.opacity = '0';
+      (bars[2] as HTMLElement).style.transform = 'rotate(-45deg) translate(5px, -5px)';
+    } else {
+      (bars[0] as HTMLElement).style.transform = 'none';
+      (bars[1] as HTMLElement).style.opacity = '1';
+      (bars[2] as HTMLElement).style.transform = 'none';
+    }
+  });
+
+  // Close menu and unlock body scroll when clicking navigation links
+  const menuLinks = mobileMenu?.querySelectorAll('.menu-item, .menu-cta');
+  menuLinks?.forEach((link) => {
+    link.addEventListener('click', () => {
+      mobileMenu?.classList.remove('active');
+      toggleBtn?.classList.remove('active');
+      document.body.style.overflow = '';
+      
+      const bars = toggleBtn?.querySelectorAll('.burger-bar');
+      bars?.forEach((bar) => {
+        (bar as HTMLElement).style.transform = 'none';
+        (bar as HTMLElement).style.opacity = '1';
+      });
+    });
+  });
+</script>

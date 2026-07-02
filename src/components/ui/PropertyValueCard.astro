@@ -1,0 +1,72 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  cityName: string;
+}
+
+const { cityName } = Astro.props;
+---
+
+<div class="pv-card">
+  <div class="pv-icon-wrapper">
+    <Icon name="ph:chart-bar-duotone" class="pv-icon" />
+  </div>
+  <div class="pv-content">
+    <h4>Valorisation immobilière à {cityName}</h4>
+    <p>Au-delà de l'imperméabilisation technique, saviez-vous qu'un ravalement de façade récent valorise le prix de revente d'une maison de <strong>8% à 15%</strong> sur le marché immobilier de {cityName} ? C'est ce que l'on appelle l'effet "coup de cœur", décisif pour les acquéreurs potentiels.</p>
+  </div>
+</div>
+
+<style>
+  .pv-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    gap: 1.25rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+  }
+
+  .pv-icon-wrapper {
+    background-color: var(--accent-light);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .pv-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--accent);
+  }
+
+  .pv-content h4 {
+    font-family: 'Outfit', sans-serif;
+    color: var(--primary-dark);
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .pv-content p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 576px) {
+    .pv-card {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+  }
+</style>

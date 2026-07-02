@@ -1,0 +1,135 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/seo/Breadcrumb.astro';
+import FaqAccordion from '../components/ui/FaqAccordion.astro';
+import ViteUnDevisWidget from '../components/affiliation/ViteUnDevisWidget.astro';
+
+const breadcrumbs = [
+  { name: "Accueil", url: "/" },
+  { name: "FAQ" }
+];
+
+const generalFAQ = [
+  {
+    question: "Combien coûte un ravalement de façade en moyenne ?",
+    answer: "Le tarif d'un ravalement de façade varie entre 30 € et 60 € / m² pour un crépi projeté monocouche de base. Pour les ravalements de type traditionnel à 3 couches ou à la chaux respirante, comptez entre 50 € et 110 € / m². Les bardages ou isolations extérieures (ITE) se situent quant à eux entre 80 € et 200 € / m²."
+  },
+  {
+    question: "Le ravalement est-il obligatoire tous les 10 ans ?",
+    answer: "La loi française (Code de la construction) stipule que les façades doivent être tenues propres et en bon état de propreté et de sécurité. À Paris et dans les communes d'Île-de-France (arrêtés préfectoraux), le ravalement est légalement obligatoire tous les 10 ans. Ailleurs, cette obligation ne s'applique que si un arrêté municipal le spécifie."
+  },
+  {
+    question: "Quelles subventions d'État pour un ravalement de façade ?",
+    answer: "Si le ravalement inclut des travaux d'économie d'énergie (comme l'isolation extérieure ITE), vous pouvez bénéficier de MaPrimeRénov' (subvention forfaitaire de l'ANAH proportionnelle à vos revenus), de la prime CEE (fournisseurs d'énergie), de la TVA à taux réduit à 5,5% ainsi que de l'Éco-PTZ (prêt sans intérêt jusqu'à 50 000 €)."
+  },
+  {
+    question: "Quelle est la durée moyenne d'un chantier de façade ?",
+    answer: "Pour une maison individuelle classique de 100 m² de murs, le chantier dure entre 1 et 2 semaines, dépendant de l'état initial du support et de la météo. Pour les immeubles en copropriété, les travaux s'étendent de 4 à 8 semaines."
+  },
+  {
+    question: "Quel artisan choisir pour un ravalement technique ou ITE ?",
+    answer: "Il est vivement conseillé de choisir une entreprise de bâtiment qualifiée RGE (Reconnu Garant de l'Environnement) et certifiée Qualibat. C'est une condition obligatoire pour obtenir les subventions de l'État (MaPrimeRénov') et bénéficier de la garantie décennale en cas de défaut d'étanchéité."
+  },
+  {
+    question: "Est-il obligatoire de déclarer les travaux de façade en mairie ?",
+    answer: "Oui. Avant tout ravalement, vous devez déposer une déclaration préalable de travaux (DP) auprès du service urbanisme de votre mairie. Celle-ci vérifiera la conformité de votre projet avec le Plan Local d'Urbanisme (PLU), notamment concernant les couleurs et finitions autorisées."
+  }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": generalFAQ.map((item) => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
+---
+
+<BaseLayout
+  title="Foire Aux Questions Ravalement de Façade : Réponses d'Experts"
+  description="Trouvez des réponses claires sur le coût du ravalement de façade, les obligations légales de votre commune, les subventions d'État 2026 et les techniques."
+  schema={faqSchema}
+>
+  <Breadcrumb items={breadcrumbs} />
+
+  <section class="faq-page">
+    <div class="container faq-container">
+      <div class="faq-main">
+        <h1 class="faq-h1">Foire Aux Questions : Tout savoir avant de ravaler</h1>
+        <p class="faq-lead">Retrouvez les réponses de nos experts techniques et juridiques à toutes vos interrogations sur la rénovation et l'entretien de vos façades.</p>
+        
+        <FaqAccordion faqItems={generalFAQ} />
+        
+        <div class="faq-devis-banner">
+          <h3>Vous souhaitez obtenir un prix sur-mesure ?</h3>
+          <p>Utilisez notre simulateur gratuit en ligne pour recevoir des offres de prix précises d'artisans locaux qualifiés :</p>
+          <ViteUnDevisWidget />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .faq-page {
+    padding: 5rem 0;
+  }
+
+  .faq-container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .faq-main {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .faq-h1 {
+    font-size: 2.25rem;
+    color: var(--primary-dark);
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--border-light);
+    padding-bottom: 0.75rem;
+  }
+
+  .faq-lead {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+  }
+
+  .faq-devis-banner {
+    border-top: 2px dashed var(--border);
+    padding-top: 2.5rem;
+    margin-top: 3rem;
+  }
+
+  .faq-devis-banner h3 {
+    font-size: 1.35rem;
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+  }
+
+  .faq-devis-banner p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 576px) {
+    .faq-main {
+      padding: 1.5rem;
+    }
+  }
+</style>

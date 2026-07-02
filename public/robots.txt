@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://cout-ravalement-facade.fr/sitemap-index.xml

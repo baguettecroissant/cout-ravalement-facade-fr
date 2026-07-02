@@ -1,0 +1,136 @@
+---
+import type { PriceRange } from '../../lib/text-utils';
+
+interface Props {
+  prices: PriceRange;
+  cityName: string;
+}
+
+const { prices, cityName } = Astro.props;
+
+// Compute raw values for 100 m² based on price range
+const baseMin = prices.enduitMonocouche.min * 100;
+const baseMax = prices.enduitMonocouche.max * 100;
+
+// Breakdown percentages
+const breakdown = [
+  { item: 'Échafaudage (montage, location, démontage)', pct: '15-20%', min: Math.round(baseMin * 0.17), max: Math.round(baseMax * 0.17) },
+  { item: 'Préparation du support (piquage, brossage, lavage)', pct: '10-15%', min: Math.round(baseMin * 0.12), max: Math.round(baseMax * 0.12) },
+  { item: 'Fourniture enduit et accessoires de pose', pct: '20-25%', min: Math.round(baseMin * 0.23), max: Math.round(baseMax * 0.23) },
+  { item: 'Main d\'œuvre d\'application', pct: '35-40%', min: Math.round(baseMin * 0.38), max: Math.round(baseMax * 0.38) },
+  { item: 'Traitement hydrofuge de protection', pct: '5-8%', min: Math.round(baseMin * 0.06), max: Math.round(baseMax * 0.06) },
+  { item: 'Nettoyage final de chantier et repli', pct: '3-5%', min: Math.round(baseMin * 0.04), max: Math.round(baseMax * 0.04) },
+];
+---
+
+<div class="breakdown-container">
+  <h3 class="section-subtitle">Ventilation théorique du budget — Maison 100 m² de façade à {cityName}</h3>
+  
+  <div class="table-wrapper">
+    <table class="cost-table">
+      <thead>
+        <tr>
+          <th>Poste de dépense</th>
+          <th>Part du budget</th>
+          <th>Coût estimé (TTC)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {breakdown.map((row) => (
+          <tr>
+            <td class="item-name"><strong>{row.item}</strong></td>
+            <td class="pct-val">{row.pct}</td>
+            <td class="price-val mono">{row.min} € – {row.max} €</td>
+          </tr>
+        ))}
+        <tr class="total-row">
+          <td><strong>TOTAL Estimation Ravalement Projeté</strong></td>
+          <td><strong>100%</strong></td>
+          <td class="price-val mono highlight">{baseMin} € – {baseMax} €</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  .breakdown-container {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+  }
+
+  .section-subtitle {
+    font-size: 1.15rem;
+    color: var(--primary-dark);
+    margin-bottom: 1.25rem;
+    border-bottom: 2px solid var(--border-light);
+    padding-bottom: 0.5rem;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  .cost-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    text-align: left;
+  }
+
+  .cost-table th {
+    background-color: var(--primary);
+    color: #ffffff;
+    padding: 0.75rem 1rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+  }
+
+  .cost-table th:first-child {
+    border-top-left-radius: 8px;
+  }
+  .cost-table th:last-child {
+    border-top-right-radius: 8px;
+  }
+
+  .cost-table td {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+
+  .cost-table tr:nth-child(even) td {
+    background-color: var(--bg-alt);
+  }
+
+  .pct-val {
+    font-weight: 500;
+  }
+
+  .price-val {
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  .total-row td {
+    background-color: var(--accent-light) !important;
+    color: var(--accent-hover) !important;
+    font-size: 1rem;
+    border-bottom: none;
+  }
+
+  .total-row td:first-child {
+    border-bottom-left-radius: 8px;
+  }
+  .total-row td:last-child {
+    border-bottom-right-radius: 8px;
+  }
+
+  .price-val.highlight {
+    animation: price-glow 4s infinite ease-in-out;
+  }
+</style>
