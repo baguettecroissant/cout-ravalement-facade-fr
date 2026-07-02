@@ -4,7 +4,6 @@ import { createHash } from 'crypto';
 export default defineConfig({
   site: 'https://cout-ravalement-facade.fr',
   output: 'static',
-  outDir: './dist/client',
   vite: {
     ssr: {
       external: [],
