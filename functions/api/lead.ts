@@ -1,11 +1,8 @@
-import type { APIRoute } from 'astro';
-
-export const prerender = false;
-
 const VUD_API_TOKEN = '17695301406978e31c715766978e31c715ae';
 const VUD_API_URL = 'https://www.viteundevis.com/api/get.php';
 
-export const POST: APIRoute = async ({ request }) => {
+export const onRequestPost = async (context: { request: Request }) => {
+  const { request } = context;
   try {
     const data = await request.json();
 
@@ -44,13 +41,12 @@ export const POST: APIRoute = async ({ request }) => {
     };
 
     // Category ID (ID_TRAVAUX)
-    // Ravalement Facade is 62. Déménagement (for test) is 145.
     postData.cat_id = data.cat_id ? String(data.cat_id) : '62';
 
     // Build the request body (URL-encoded format)
     const body = new URLSearchParams(postData).toString();
 
-    // Determine target URL (allow testing on test=1 via query parameter or a flag)
+    // Determine target URL
     const isTest = data.isTest === true || data.cat_id === 145 || data.cat_id === '145';
     const targetUrl = isTest ? `${VUD_API_URL}?test=1` : VUD_API_URL;
 
@@ -76,7 +72,6 @@ export const POST: APIRoute = async ({ request }) => {
     try {
       result = JSON.parse(rawResult);
     } catch (e) {
-      // In case they returned serialized PHP or non-JSON
       return new Response(
         JSON.stringify({ success: false, error: 'Invalid API response format', raw: rawResult }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }

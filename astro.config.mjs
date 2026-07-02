@@ -1,13 +1,9 @@
 import { defineConfig } from 'astro/config';
-import cloudflare from '@astrojs/cloudflare';
 import { createHash } from 'crypto';
-
-const isBuild = process.argv.includes('build');
 
 export default defineConfig({
   site: 'https://cout-ravalement-facade.fr',
   output: 'static',
-  adapter: isBuild ? cloudflare() : undefined,
   vite: {
     ssr: {
       external: [],
