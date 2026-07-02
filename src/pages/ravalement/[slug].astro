@@ -25,26 +25,22 @@ import {
   getEnergyAidsDetailed,
 } from '../../lib/text-utils';
 
-import { getNearbyCities, getDepartmentSlug } from '../../lib/cities';
+import { getNearbyCities, getDepartmentSlug, getCityBySlug } from '../../lib/cities';
 import type { City } from '../../types/index';
 
-export const prerender = true;
+export const prerender = false;
 
-export async function getStaticPaths() {
-  const citiesData = await import('../../lib/db/cities.json');
-  const cities = citiesData.default as City[];
-  
-  return cities.map((city) => ({
-    params: { slug: city.slug },
-    props: { city },
-  }));
+const { slug } = Astro.params;
+
+if (!slug) {
+  return new Response('Not Found', { status: 404 });
 }
 
-interface Props {
-  city: City;
-}
+const city = getCityBySlug(slug);
 
-const { city } = Astro.props;
+if (!city) {
+  return Astro.redirect('/404');
+}
 
 const h1 = getCityH1(city);
 const title = getCityMetaTitle(city);

@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/seo/Breadcrumb.astro';
+
+const breadcrumbs = [
+  { name: "Accueil", url: "/" },
+  { name: "Page non trouvée" }
+];
+---
+
+<BaseLayout
+  title="Page Non Trouvée — Cout-Ravalement-Facade.fr"
+  description="La page que vous recherchez n'existe pas ou a été déplacée."
+>
+  <Breadcrumb items={breadcrumbs} />
+
+  <section class="not-found-page">
+    <div class="container not-found-container">
+      <div class="not-found-card">
+        <h1 class="not-found-title">404</h1>
+        <p class="not-found-text">Désolé, la page que vous recherchez n'existe pas ou a été déplacée.</p>
+        <div class="not-found-actions">
+          <a href="/" class="btn btn-primary">Retour à l'accueil</a>
+          <a href="/estimation" class="btn btn-outline">Estimer le coût de vos travaux</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found-page {
+    padding: 6rem 0;
+  }
+
+  .not-found-container {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .not-found-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 3.5rem 2.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .not-found-title {
+    font-size: 5rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin: 0 0 1rem 0;
+    line-height: 1;
+  }
+
+  .not-found-text {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .not-found-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 576px) {
+    .not-found-actions {
+      flex-direction: column;
+    }
+  }
+</style>
